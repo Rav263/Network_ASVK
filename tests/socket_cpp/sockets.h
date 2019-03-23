@@ -16,7 +16,9 @@ namespace Net {
     private:
         int sock;
         struct sockaddr_in sock_addr;
-    
+        int client;
+        socklen_t size;
+
     public:
         ServerSocket(int port) {
             Logs::log("Creating socket.. ");
@@ -40,6 +42,9 @@ namespace Net {
                 throw 1;
             }
             Logs::logln("Successfull");
+            this->client = -1;
+
+            this->size = sizeof(this->sock_addr);
         }
 
         int get_socket() const {
@@ -51,11 +56,40 @@ namespace Net {
         }
 
         size_t get_sock_addr_size() const {
-            return sizeof(this->sock_addr);
+            return this->size;
+        }
+    
+        void set_socket_available_mode() const {
+            Logs::log("Setting up connecting mode.. ");
+            if (listen(this->sock, 1) < 0) {
+                Logs::logln_err("Falied");
+                throw 1;
+            }
+
+            Logs::logln("Successfull");
+        }
+
+        void accept_client() {
+            Logs::log("Connecting to client.. ");
+            
+            this->client = accept(this->sock, (struct sockaddr *) &(this->sock_addr), &(this->size));
+
+            if (this->client < 0) {
+                Logs::logln_err("Falied");
+                throw 1;
+            }
+
+            Logs::logln("Successfull");
+        }
+
+        void close_client() { 
+            if (this->client > 0) close(this->client);
+            this->client = -1;
         }
 
         ~ServerSocket() {
             close(this->sock);
+            if (this->client > 0) close(this->client);
         }
     };
 
