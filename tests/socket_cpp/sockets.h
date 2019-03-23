@@ -86,6 +86,11 @@ namespace Net {
             if (this->client > 0) close(this->client);
             this->client = -1;
         }
+        
+        void send_message() {
+            int64_t some;
+        }
+    
 
         ~ServerSocket() {
             close(this->sock);
