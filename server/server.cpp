@@ -1,3 +1,7 @@
+#include <string>
+#include <iostream>
+
+
 #include "../headers/sockets.h"
 #include "../headers/logs.h"
 #include "../headers/network.h"
@@ -12,4 +16,8 @@ int main() {
     Net::ServerSocket server(PORT_NUM);
     server.set_socket_available_mode();
     server.accept_client();
+
+    std::string some;
+
+    Net::recv_string(some, server.get_client());
 }

@@ -5,6 +5,9 @@
 
 #include "logs.h"
 
+#ifndef NETWORK_H_
+#define NETWORK_H_
+
 
 using Vertex = int64_t;
 using Mass = int64_t;
@@ -57,3 +60,5 @@ public:
         return false;
     }
 };
+
+#endif

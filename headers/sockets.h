@@ -5,8 +5,11 @@
 #include <netinet/in.h>
 #include <string>
 #include <iostream>
-
+#include <map>
+#include <utility>
 #include "logs.h"
+#include "network.h"
+
 
 #ifndef SOCKET_H_
 #define SOCKET_H_
@@ -15,19 +18,32 @@ namespace Net {
     void send_buffer(int socket, const void *buffer, ssize_t len) {
         ssize_t writed = 0;
         while(writed != len) {
-            ssize_t tmp = send(socket, (char *)buffer + writed, len, 0);
+            ssize_t tmp = send(socket, buffer + writed, len, 0);
             
             if (tmp < 0) throw 1;
             writed += tmp;
         }
     }
 
-
     void send_string(std::string &mess, int socket) {
         int64_t len = mess.size();
 
         send_buffer(socket, mess.c_str(), len);
     }
+
+    void send_array(Vertex *graph, ssize_t len, int socket) { 
+        send_buffer(socket, graph, len);
+    }
+
+
+    void recv_buffer(int socket, void **buffer, ssize_t len) {
+        ssize_t readed = 0;
+
+        while (readed != len) {
+            ssize_t tmp = recv(socket, buffer+readed
+        }
+    }
+
     class ServerSocket {
     private:
         int sock;
@@ -103,8 +119,9 @@ namespace Net {
             this->client = -1;
         }
 
-
-        
+        int get_client() {
+            return this->client;
+        }        
 
         ~ServerSocket() {
             close(this->sock);
