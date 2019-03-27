@@ -12,6 +12,22 @@
 #define SOCKET_H_
 
 namespace Net {
+    void send_buffer(int socket, const void *buffer, ssize_t len) {
+        ssize_t writed = 0;
+        while(writed != len) {
+            ssize_t tmp = send(socket, (char *)buffer + writed, len, 0);
+            
+            if (tmp < 0) throw 1;
+            writed += tmp;
+        }
+    }
+
+
+    void send_string(std::string &mess, int socket) {
+        int64_t len = mess.size();
+
+        send_buffer(socket, mess.c_str(), len);
+    }
     class ServerSocket {
     private:
         int sock;
@@ -86,11 +102,9 @@ namespace Net {
             if (this->client > 0) close(this->client);
             this->client = -1;
         }
+
+
         
-        void send_message() {
-            int64_t some;
-        }
-    
 
         ~ServerSocket() {
             close(this->sock);
