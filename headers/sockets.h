@@ -25,6 +25,7 @@ namespace Net {
     template<typename T>
     void recv_buffer(int, T *, ssize_t);
     void recv_vertex(Vertex *, int);
+    void recv_array(Vertex *, ssize_t, int);
 
     class ServerSocket {
     private:

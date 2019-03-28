@@ -21,6 +21,14 @@ int main() {
         Vertex now = 0;
 
         Net::recv_vertex(&now, server.get_client());
-        std::cout << "Client send this number: " << now << std::endl;
+        Vertex *arr = new Vertex[now];
+
+        Net::recv_array(arr, now, server.get_client());
+        std::cout << "Client send this numbers: " << now << std::endl;
+        
+        for(int i = 0; i < now; i++) std::cout << arr[i] << " ";
+        std::cout << std::endl;
+        
+        delete[] arr;
     }
 }

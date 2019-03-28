@@ -3,6 +3,7 @@
 #include <string>
 #include <sys/socket.h>
 #include <vector>
+#include <iostream>
 
 #include "../headers/logs.h"
 #include "../headers/network.h"
@@ -47,5 +48,9 @@ namespace Net {
 
     void recv_vertex(Vertex *ver, int socket) {
         recv_buffer(socket, ver, sizeof(*ver));
+    }
+
+    void recv_array(Vertex *graph, ssize_t len, int socket) {
+        recv_buffer(socket, graph, len * sizeof(*graph));
     }
 }

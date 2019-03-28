@@ -21,10 +21,18 @@ int main(int argc, char *argv[]) {
     Vertex now;
 
     while (true) {
-        std::cout << "Please enter number: ";
+        std::cout << "Please enter array_size: ";
         std::cin >> now;
-
         Net::send_vertex(&now, client->get_socket());
+
+        Vertex *arr = new Vertex[now];
+
+        for (int i = 0; i < now; i++) {
+            std::cin >> arr[i];
+        }
+
+        Net::send_array(arr, now, client->get_socket());
+        delete[] arr;
     }
     delete client;
 }
