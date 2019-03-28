@@ -17,7 +17,10 @@ int main() {
     server.set_socket_available_mode();
     server.accept_client();
 
-    std::string some;
+    while (true) {
+        Vertex now = 0;
 
-    Net::recv_string(some, server.get_client());
+        Net::recv_vertex(&now, server.get_client());
+        std::cout << "Client send this number: " << now << std::endl;
+    }
 }

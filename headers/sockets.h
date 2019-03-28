@@ -15,34 +15,16 @@
 #define SOCKET_H_
 
 namespace Net {
-    void send_buffer(int socket, const void *buffer, ssize_t len) {
-        ssize_t writed = 0;
-        while(writed != len) {
-            ssize_t tmp = send(socket, buffer + writed, len, 0);
-            
-            if (tmp < 0) throw 1;
-            writed += tmp;
-        }
-    }
+    template<typename T>
+    void send_buffer(int, const T*, ssize_t);
+    
+    void send_string(std::string &, int);
+    void send_array(Vertex *, ssize_t, int);
+    void send_vertex(Vertex *, int);
 
-    void send_string(std::string &mess, int socket) {
-        int64_t len = mess.size();
-
-        send_buffer(socket, mess.c_str(), len);
-    }
-
-    void send_array(Vertex *graph, ssize_t len, int socket) { 
-        send_buffer(socket, graph, len);
-    }
-
-
-    void recv_buffer(int socket, void **buffer, ssize_t len) {
-        ssize_t readed = 0;
-
-        while (readed != len) {
-            ssize_t tmp = recv(socket, buffer+readed
-        }
-    }
+    template<typename T>
+    void recv_buffer(int, T *, ssize_t);
+    void recv_vertex(Vertex *, int);
 
     class ServerSocket {
     private:

@@ -1,3 +1,3 @@
 #! /bin/bash
 
-g++ -std=gnu++17 -O3 client/client.cpp client/logs.cpp -oclient.out
+g++ -std=gnu++17 -O3 client/client.cpp both_src/* -oclient.out
