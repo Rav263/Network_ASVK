@@ -16,7 +16,10 @@ using Edges = std::pair<Vertex, std::map<Vertex, Mass>>;
 using Graph = std::map<Vertex, std::map<Vertex, Mass>>;
 using Path = std::vector<Edge>;
 using VertexList = std::map<Vertex, Mass>;
-using Queue = std::queue<Vertex>;
+
+
+
+
 
 class NetworkGraph {
 private:
@@ -63,5 +66,10 @@ public:
         return false;
     }
 };
+
+Vertex *create_arr_from_graph(Graph &graph, ssize_t &size);
+void create_graph_from_array(Vertex *ver_graph, ssize_t &size, NetworkGraph &graph);
+void read_graph(NetworkGraph &graph);
+void print_graph(NetworkGraph &graph);
 
 #endif
