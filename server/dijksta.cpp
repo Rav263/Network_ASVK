@@ -26,10 +26,12 @@ void calc_vertex(Vertex vertex, Graph &graph, VertexList &vertexes, std::set<Ver
 void add_vertexes(Vertex now_vertex, VertexList &list, 
         std::set<Vertex> &used, std::set<std::pair<Mass, Vertex>> &queue, 
         Graph &graph, std::set<Vertex> &is_in_queue) {
+
     for (Edge now_edge : graph[now_vertex]) {
         if (not used.count(now_edge.first) && not is_in_queue.count(now_edge.first)) {
             Mass ver_mass = (not list.count(now_edge.first)) * INT64_MAX;
             ver_mass = ver_mass > 0 ? ver_mass : list[now_edge.first];
+            
             queue.insert(std::pair<Mass, Vertex>(ver_mass, now_edge.first));
             is_in_queue.insert(now_edge.first);
         }
@@ -51,7 +53,6 @@ void calc_path(Path &path, Graph &graph, Vertex start, Vertex end) {
         Vertex now_vertex = now_pair.second;
         
         used.insert(now_vertex);
-        std::cout << now_vertex << std::endl;
         calc_vertex(now_vertex, graph, vertexes, used);
         
         add_vertexes(now_vertex, vertexes,  used, ver_queue, graph, is_in_queue);
