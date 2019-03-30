@@ -8,12 +8,15 @@
 #include "../headers/dijkstra.h"
 
 enum {
-    PORT_NUM = 2917,
     BUF_SIZE = 1024,
 };
 
 int main() {
-    Net::ServerSocket server(PORT_NUM);
+    int port;
+    std::cout << "Please enter port: ";
+    std::cin >> port;
+
+    Net::ServerSocket server(port);
     server.set_socket_available_mode();
     server.accept_client();
 
@@ -36,8 +39,7 @@ int main() {
     Path path;
 
     calc_path(path, graph.get_full_graph(), start, end);
-
-    std::cout << path.size() << " " << path[0].second << std::endl;
+    Net::send_vertex(&path[0].second, server.get_client());
 
     delete[] arr;
 }

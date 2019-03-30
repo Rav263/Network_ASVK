@@ -5,17 +5,17 @@
 #include "../headers/logs.h"
 #include "../headers/network.h"
 
-enum {
-    PORT_NUM = 2917,
-};
-
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        Logs::logln_err("NO_IP");
-        return 1;
-    }
+    int port;
+    std::string ip;
 
-    Net::ClientSocket *client = new Net::ClientSocket(PORT_NUM, std::string(argv[1]));
+    std::cout << "Please enter IP: ";
+    std::cin >> ip;
+
+    std::cout << "Please enter PORT: ";
+    std::cin >> port;
+    
+    Net::ClientSocket *client = new Net::ClientSocket(port, ip);
     client->connect_to_server();
 
     Vertex now;
@@ -39,7 +39,13 @@ int main(int argc, char *argv[]) {
     Net::send_array(ver_arr, size, client->get_socket());
     Net::send_vertex(&start, client->get_socket());
     Net::send_vertex(&end, client->get_socket());
-    
+
+    Mass path;
+
+    Net::recv_vertex(&path, client->get_socket());
+
+    std::cout << "Your minimal path: " << path << std::endl;
+
     delete[] ver_arr;
     delete client;
 }
