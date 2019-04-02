@@ -31,32 +31,4 @@ void create_graph_from_array(Vertex *ver_graph, ssize_t &size, NetworkGraph &gra
     }
 }
 
-void read_graph(NetworkGraph &graph) {
-    std::cout << "Please enter number of edges: ";
-    ssize_t num;
-    std::cin >> num;
 
-    std::cout << "Enter graph edges like \"Vertex Vertex Mass\"" << std::endl;
-
-    Vertex start, end;
-    Mass mass;
-    
-
-    for (ssize_t i = 0; i < num; i++) {
-        std::cin >> start >> end >> mass;
-        graph.add_edge(start, end, mass);
-    }
-}
-
-void print_graph(NetworkGraph &graph) {
-    std::cout << "Your graph (vertex, vertex, mass)" << std::endl;
-
-    for (Edges now_edges : graph.get_full_graph()) {
-        for (Edge now_edge : now_edges.second) {
-            std::cout << "(" <<now_edges.first << ", ";
-            std::cout << now_edge.first << ", ";
-            std::cout << now_edge.second << ")";
-            std::cout << std::endl;
-        }
-    }
-}

@@ -4,6 +4,7 @@
 #include "../headers/sockets.h"
 #include "../headers/logs.h"
 #include "../headers/network.h"
+#include "../headers/io_head.h"
 
 int main(int argc, char *argv[]) {
     int port;
@@ -22,8 +23,7 @@ int main(int argc, char *argv[]) {
 
     NetworkGraph graph;
 
-    read_graph(graph);
-    print_graph(graph);
+    IO::read_graph(graph);
 
     ssize_t size;
 

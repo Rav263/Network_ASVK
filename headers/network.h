@@ -69,7 +69,5 @@ public:
 
 Vertex *create_arr_from_graph(Graph &graph, ssize_t &size);
 void create_graph_from_array(Vertex *ver_graph, ssize_t &size, NetworkGraph &graph);
-void read_graph(NetworkGraph &graph);
-void print_graph(NetworkGraph &graph);
 
 #endif
