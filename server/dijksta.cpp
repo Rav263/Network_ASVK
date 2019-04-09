@@ -10,14 +10,18 @@
 #include "../headers/logs.h"
 
 
-void calc_vertex(Vertex vertex, Graph &graph, VertexList &vertexes, std::set<Vertex> used) {
+void calc_vertex(Vertex vertex, Graph &graph, VertexList &vertexes, std::set<Vertex> used, PathList &paths) {
     for (auto edge : graph[vertex]) {
         if (vertexes.count(edge.first) > 0 && vertexes[edge.first] > vertexes[vertex] + edge.second) {
             vertexes[edge.first] = vertexes[vertex] + edge.second;
+            paths[edge.first] = paths[vertex];
+            paths[edge.first].push_back(edge.first);
         }
         
         if (vertexes.count(edge.first) == 0) {
             vertexes.insert(Edge(edge.first, vertexes[vertex] + edge.second));
+            paths.insert(std::pair<Vertex, Path>(edge.first, paths[vertex]));
+            paths[edge.first].push_back(edge.first);
         }
     }
 }
@@ -39,13 +43,16 @@ void add_vertexes(Vertex now_vertex, VertexList &list,
 }
 
 
-void calc_path(Path &path, Graph &graph, Vertex start, Vertex end) {
+Mass calc_path(Path &path, Graph &graph, Vertex start, Vertex end) {
+    if (start == end) return 0;
     std::set<std::pair<Mass, Vertex>> ver_queue;
     std::set<Vertex> is_in_queue;
     ver_queue.insert(std::pair<Mass, Vertex>(0, start)); 
     
     VertexList vertexes;
     vertexes[start] = 0;
+    PathList paths;
+    paths[start] = {start};
 
     std::set<Vertex> used;
 
@@ -53,11 +60,12 @@ void calc_path(Path &path, Graph &graph, Vertex start, Vertex end) {
         Vertex now_vertex = now_pair.second;
         
         used.insert(now_vertex);
-        calc_vertex(now_vertex, graph, vertexes, used);
+        calc_vertex(now_vertex, graph, vertexes, used, paths);
         
         add_vertexes(now_vertex, vertexes,  used, ver_queue, graph, is_in_queue);
         ver_queue.erase(now_pair);
     }
-    
-    path.push_back(Edge(end, vertexes[end]));
+    path = paths[end];
+    if (used.count(end) == 0) return -1;
+    return vertexes[end];
 }

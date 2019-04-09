@@ -14,9 +14,9 @@ using Mass = int64_t;
 using Edge = std::pair<Vertex, Mass>;
 using Edges = std::pair<Vertex, std::map<Vertex, Mass>>;
 using Graph = std::map<Vertex, std::map<Vertex, Mass>>;
-using Path = std::vector<Edge>;
+using Path = std::vector<Vertex>;
 using VertexList = std::map<Vertex, Mass>;
-
+using PathList = std::map<Vertex, Path>;
 
 
 

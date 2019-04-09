@@ -84,10 +84,16 @@ namespace Net {
             Logs::logln("Successfull");
         }
 
-        void accept_client() {
+        int accept_client() {
             Logs::log("Connecting to client.. ");
             
             this->client = accept(this->sock, (struct sockaddr *) &(this->sock_addr), &(this->size));
+            int pid = fork();
+
+            if (pid == 0) {
+                Logs::logln("Successfull forked");
+                return 0;
+            }
 
             if (this->client < 0) {
                 Logs::logln_err("Falied");
@@ -95,6 +101,7 @@ namespace Net {
             }
 
             Logs::logln("Successfull");
+            return pid;
         }
 
         void close_client() { 

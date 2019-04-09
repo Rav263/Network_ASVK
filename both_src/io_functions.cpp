@@ -11,7 +11,9 @@ namespace IO {
         std::cout << "V \%vertex\% -- Add vertex to graph" << std::endl;
         std::cout << "E \%vertex\% \%vertex\% \%mass\% -- Add edge to graph" << std::endl;
         std::cout << "PRINT -- print graph" << std::endl;
-        std::cout << "SEND -- send graph to server" << std::endl;
+        std::cout << "DIST -- minimal distance between vertexes" << std::endl;
+        std::cout << "PATH -- minimal path between vertexes" << std::endl;
+        std::cout << "EXIT -- end work with server" << std::endl;
     }
     void print_graph(NetworkGraph &graph) {
         std::cout << "Your graph (vertex, vertex, mass)" << std::endl;
@@ -26,7 +28,7 @@ namespace IO {
         }
     }
     
-    void read_graph(NetworkGraph &graph) {
+    int read_graph(NetworkGraph &graph) {
         std::cout << "Please enter HELP to see list of commands" << std::endl;
         std::string now;
 
@@ -47,9 +49,15 @@ namespace IO {
                 graph.add_edge(start, end, mass);
             } else if (now.compare("PRINT") == 0) {
                 print_graph(graph);
-            } else if (now.compare("SEND") == 0) {
-                break;
+            } else if (now.compare("DIST") == 0) {
+                return 0;
+            } else if (now.compare("PATH") == 0) {
+                return 1;
+            } else if (now.compare("EXIT") == 0) {
+                return -1;
             }
         }
+
+        return 3;
     }
 }
