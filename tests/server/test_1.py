@@ -82,7 +82,7 @@ last_edge_weight = None
 
 def send_data_to_server(edges, nodes):
     sock = socket.socket()
-    sock.connect(('localhost', 2222))
+    sock.connect(('localhost', 19121))
     an_edges = []
 
     for an in edges:
@@ -90,15 +90,33 @@ def send_data_to_server(edges, nodes):
         an_edges.append(an['data']['target'])
         an_edges.append(an['data']['label'])
 
+    print(an_edges)
+    
+    counter = 0
+    for an in an_edges:
+        counter += len(an) + 1
+
+    print(counter)
+    print(counter.to_bytes(4, byteorder='little'))
+    sock.send(counter.to_bytes(4, byteorder='little'))
+
+
     for an in an_edges:
         sock.send(an.encode("utf-8"))
-        sock.sned(b' ')
+        sock.send(b' ')
 
     return sock
 def recv_data_from_server(sock):
+    path = []
+    while True:
+        data = sock.recv(1024)
+        if not data:
+            break
+        path.append(data)
+
     sock.close()
 
-    return "path"
+    return data
 
 
 
@@ -176,7 +194,7 @@ def update_elements(data, btn_submit, btn_add, btn_remove, elements, edge_weight
         if flag == 1:
             flag = 0
             edges.append({
-                'data': {'source': last_node['id'], 'target': data['id'], 'label': None},
+                'data': {'source': last_node['id'], 'target': data['id'], 'label': "Please enter edge weight"},
             })
             field = "Please enter edge weight"
             edge_flag = 1

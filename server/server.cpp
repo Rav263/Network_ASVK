@@ -2,6 +2,8 @@
 #include <iostream>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <sstream>
+
 
 #include "../headers/sockets.h"
 #include "../headers/logs.h"
@@ -11,13 +13,117 @@
 
 
 enum {
+    PORT = 19121,
     BUF_SIZE = 1024,
 };
+void recv_buffer(int socket, char *buffer, ssize_t len) {
+    ssize_t readed = 0;
+
+    while (readed != len) {
+        ssize_t tmp = recv(socket, (char *)buffer + readed, len - readed, 0);
+            
+        if (tmp < 0) throw 1;
+        readed += tmp;
+    }
+}
+
+Vertex *get_data(Net::ServerSocket &server, Vertex &start, Vertex &end, ssize_t &size) {
+
+    int buf_size;
+
+    recv(server.get_client(), &buf_size, sizeof(buf_size), 0);
+  
+    std::cout << "SHIT:: " << buf_size << std::endl;
+
+    char *buff = new char[buf_size];
+
+    recv_buffer(server.get_client(), buff, buf_size);
+
+    std::string data(buff);
+
+    std::cout << "1.1  " << data <<  std::endl;
+
+
+    std::stringstream in_str(data);
+
+    std::vector<Vertex> nums;
+
+    Vertex now;
+
+    while (in_str >> now) nums.push_back(now);
+    Vertex *vertexes = new Vertex[nums.size()];
+
+
+    for (size_t i = 0; i < nums.size() - 2; i++) vertexes[i] = nums[i];
+    start = nums[nums.size() - 2];
+    end = nums[nums.size() - 1];
+    size = nums.size() - 2;
+    std::cout << "1.2" << std::endl;
+
+    return vertexes;
+}
+
+void create_result(std::string &res, Path &path, Mass &dist) {
+    std::ostringstream out_str(res);
+
+    for (int i = 0; i < path.size() - 1; i++) {
+        out_str << path[i] << " -> ";
+    }
+
+    out_str << path[path.size() - 1] << " ";
+
+    out_str << "MINIMAL PATH: " << dist;
+}
+
+
+
+void work_with_web() {
+    Net::ServerSocket server(PORT);
+    server.set_socket_available_mode();
+    
+    int pid;
+
+    while ((pid = server.accept_client()) == 0);
+    
+    std::cout << "1" << std::endl;
+    Vertex start, end;
+
+    ssize_t size;
+    Vertex *vertexes = get_data(server, start, end, size);
+    std::cout << "2" << std::endl;
+
+    NetworkGraph graph;
+    create_graph_from_array(vertexes, size, graph);
+    
+    std::cout << "3" << std::endl;
+
+    IO::print_graph(graph);
+    
+    Path path;
+    Mass dist = calc_path(path, graph.get_full_graph(), start, end);
+
+    std::string result;
+    create_result(result, path, dist);
+
+    Net::send_string(result, server.get_client());
+
+    while(wait(NULL) != -1);
+}
+
+
 
 int main() {
     int port;
     std::cout << "Please enter port: ";
     std::cin >> port;
+    
+    int child_pid = fork();
+
+    if (child_pid == 0) {
+        work_with_web();
+        return 0;
+    }
+
 
     Net::ServerSocket server(port);
     server.set_socket_available_mode();
