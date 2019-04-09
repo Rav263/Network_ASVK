@@ -221,5 +221,5 @@ def update_elements(data, btn_submit, btn_add, btn_remove, elements, edge_weight
     return elements
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0')
 

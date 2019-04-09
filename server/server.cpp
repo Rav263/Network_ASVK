@@ -124,7 +124,7 @@ int main() {
 
     child_pid = fork();
     if (child_pid == 0) {
-        execlp("python", "python", "server.py", NULL);
+        execlp("python3", "python3", "server.py", NULL);
 
         return 0;
     }
