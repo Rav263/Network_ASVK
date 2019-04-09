@@ -122,6 +122,13 @@ int main() {
         return 0;
     }
 
+    child_pid = fork();
+    if (child_pid == 0) {
+        execlp("python", "python", "server.py", NULL);
+
+        return 0;
+    }
+
 
     Net::ServerSocket server(PORT_2);
     server.set_socket_available_mode();
