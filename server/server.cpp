@@ -33,16 +33,11 @@ Vertex *get_data(Net::ServerSocket &server, Vertex &start, Vertex &end, ssize_t 
 
     recv(server.get_client(), &buf_size, sizeof(buf_size), 0);
   
-    std::cout << "SHIT:: " << buf_size << std::endl;
-
     char *buff = new char[buf_size];
 
     recv_buffer(server.get_client(), buff, buf_size);
 
     std::string data(buff);
-
-    std::cout << "1.1  " << data <<  std::endl;
-
 
     std::stringstream in_str(data);
 
@@ -58,13 +53,12 @@ Vertex *get_data(Net::ServerSocket &server, Vertex &start, Vertex &end, ssize_t 
     start = nums[nums.size() - 2];
     end = nums[nums.size() - 1];
     size = nums.size() - 2;
-    std::cout << "1.2" << std::endl;
 
     return vertexes;
 }
 
 void create_result(std::string &res, Path &path, Mass &dist) {
-    std::ostringstream out_str(res);
+    std::ostringstream out_str;
 
     for (int i = 0; i < path.size() - 1; i++) {
         out_str << path[i] << " -> ";
@@ -72,7 +66,9 @@ void create_result(std::string &res, Path &path, Mass &dist) {
 
     out_str << path[path.size() - 1] << " ";
 
-    out_str << "MINIMAL PATH: " << dist;
+    out_str << "Minimal path: " << dist;
+
+    res = out_str.str();
 }
 
 
@@ -85,27 +81,32 @@ void work_with_web() {
 
     while ((pid = server.accept_client()) == 0);
     
-    std::cout << "1" << std::endl;
     Vertex start, end;
 
     ssize_t size;
     Vertex *vertexes = get_data(server, start, end, size);
-    std::cout << "2" << std::endl;
 
     NetworkGraph graph;
     create_graph_from_array(vertexes, size, graph);
     
-    std::cout << "3" << std::endl;
-
     IO::print_graph(graph);
-    
+
     Path path;
     Mass dist = calc_path(path, graph.get_full_graph(), start, end);
 
+    std::cout << dist << std::endl;
+
     std::string result;
     create_result(result, path, dist);
+    char *buff = new char[result.size()];
 
-    Net::send_string(result, server.get_client());
+    for (int i = 0; i < result.size(); i++) buff[i] = result[i]; 
+    int ss = result.size();
+
+
+    send(server.get_client(), buff, result.size(), 0);
+
+    server.close_client();
 
     while(wait(NULL) != -1);
 }
