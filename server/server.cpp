@@ -13,7 +13,8 @@
 
 
 enum {
-    PORT = 19121,
+    PORT_1 = 19121,
+    PORT_2 = 19212,
     BUF_SIZE = 1024,
 };
 void recv_buffer(int socket, char *buffer, ssize_t len) {
@@ -74,7 +75,7 @@ void create_result(std::string &res, Path &path, Mass &dist) {
 
 
 void work_with_web() {
-    Net::ServerSocket server(PORT);
+    Net::ServerSocket server(PORT_1);
     server.set_socket_available_mode();
     
     int pid;
@@ -113,11 +114,7 @@ void work_with_web() {
 
 
 
-int main() {
-    int port;
-    std::cout << "Please enter port: ";
-    std::cin >> port;
-    
+int main() { 
     int child_pid = fork();
 
     if (child_pid == 0) {
@@ -126,7 +123,7 @@ int main() {
     }
 
 
-    Net::ServerSocket server(port);
+    Net::ServerSocket server(PORT_2);
     server.set_socket_available_mode();
     
     int pid;

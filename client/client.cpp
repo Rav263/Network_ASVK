@@ -7,14 +7,11 @@
 #include "../headers/io_head.h"
 
 int main(int argc, char *argv[]) {
-    int port;
+    int port = 19212;
     std::string ip;
 
     std::cout << "Please enter IP: ";
     std::cin >> ip;
-
-    std::cout << "Please enter PORT: ";
-    std::cin >> port;
     
     Net::ClientSocket *client = new Net::ClientSocket(port, ip);
     client->connect_to_server();
