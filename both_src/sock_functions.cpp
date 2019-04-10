@@ -15,7 +15,7 @@ namespace Net {
         while(writed != len) {
             ssize_t tmp = send(socket, (char *)buffer + writed, len - writed, 0);
             
-            if (tmp < 0) throw 1;
+            if (tmp <= 0) throw 1;
             writed += tmp;
         }
     }
@@ -41,7 +41,7 @@ namespace Net {
         while (readed != len) {
             ssize_t tmp = recv(socket, (char *)buffer + readed, len - readed, 0);
             
-            if (tmp < 0) throw 1;
+            if (tmp <= 0) throw 1;
             readed += tmp;
         }
     }

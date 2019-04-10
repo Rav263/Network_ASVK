@@ -81,7 +81,8 @@ void work_with_web() {
     int pid;
 
     while ((pid = server.accept_client()) == 0);
-    
+
+    try {
     Vertex start, end;
 
     ssize_t size;
@@ -108,7 +109,9 @@ void work_with_web() {
     send(server.get_client(), buff, result.size(), 0);
 
     server.close_client();
-
+    }catch(int e) {
+        Logs::logln_err("CLIENT DEAD");
+    }
     while(wait(NULL) != -1);
 }
 
@@ -139,51 +142,55 @@ int main() {
     
     std::cout << "PID: " << pid << std::endl;
 
-    while (true) {
-        Vertex now = 0;
+    try {
+        while (true) {
+            Vertex now = 0;
 
-        int64_t command;
-        Net::recv_vertex(&command, server.get_client());
+            int64_t command;
+            Net::recv_vertex(&command, server.get_client());
 
-        if (command == -1) break;
+            if (command == -1) break;
 
-        Net::recv_vertex(&now, server.get_client());
-        Vertex *arr = new Vertex[now];
+            Net::recv_vertex(&now, server.get_client());
+            Vertex *arr = new Vertex[now];
 
-        Net::recv_array(arr, now, server.get_client());
+            Net::recv_array(arr, now, server.get_client());
     
-        NetworkGraph graph;
-        create_graph_from_array(arr, now, graph);
+            NetworkGraph graph;
+            create_graph_from_array(arr, now, graph);
 
-        Vertex start, end;
-        Net::recv_vertex(&start, server.get_client());
-        Net::recv_vertex(&end, server.get_client());
+            Vertex start, end;
+            Net::recv_vertex(&start, server.get_client());
+            Net::recv_vertex(&end, server.get_client());
 
-        IO::print_graph(graph);
+            IO::print_graph(graph);
     
-        Path path;
+            Path path;
 
-        Mass dist = calc_path(path, graph.get_full_graph(), start, end);
-        if (command == 0) {
-            Net::send_vertex(&dist, server.get_client());
-        } 
+            Mass dist = calc_path(path, graph.get_full_graph(), start, end);
+            if (command == 0) {
+                Net::send_vertex(&dist, server.get_client());
+            } 
 
-        if (command == 1) {
-            ssize_t size = path.size();
-            if (dist == -1) size = 0;
-            Net::send_vertex(&size, server.get_client());
+            if (command == 1) {
+                ssize_t size = path.size();
+                if (dist == -1) size = 0;
+                Net::send_vertex(&size, server.get_client());
             
-            Vertex *path_arr = new Vertex[path.size()];
+                Vertex *path_arr = new Vertex[path.size()];
 
-            for (int i = 0; i < path.size(); i++) {
-                path_arr[i] = path[i];
+                for (int i = 0; i < path.size(); i++) {
+                    path_arr[i] = path[i];
+                }
+
+                Net::send_array(path_arr, path.size(), server.get_client());
+
+                delete[] path_arr;
             }
-
-            Net::send_array(path_arr, path.size(), server.get_client());
-
-            delete[] path_arr;
+            delete[] arr;
         }
-        delete[] arr;
+    } catch(int e) {
+        Logs::logln_err("CLIENT_DEAD");
     }
     server.close_client();
 

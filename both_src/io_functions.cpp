@@ -14,6 +14,7 @@ namespace IO {
         std::cout << "DIST -- minimal distance between vertexes" << std::endl;
         std::cout << "PATH -- minimal path between vertexes" << std::endl;
         std::cout << "EXIT -- end work with server" << std::endl;
+        std::cout << "FILE -- read graph from file" << std::endl;
     }
     void print_graph(NetworkGraph &graph) {
         std::cout << "Your graph (vertex, vertex, mass)" << std::endl;
@@ -27,7 +28,17 @@ namespace IO {
             }
         }
     }
-    
+    void read_graph_from_file(NetworkGraph &graph, std::ifstream &file) {
+        Vertex start, end;
+        Mass mass;
+
+        while (file >> start >> end >> mass){
+            graph.add_edge(start, end, mass);
+        }
+
+        print_graph(graph);
+    }
+
     int read_graph(NetworkGraph &graph) {
         std::cout << "Please enter HELP to see list of commands" << std::endl;
         std::string now;
@@ -55,6 +66,14 @@ namespace IO {
                 return 1;
             } else if (now.compare("EXIT") == 0) {
                 return -1;
+            } else if (now.compare("FILE") == 0) {
+                std::cout << "please enter file name: ";
+                std::string file_name;
+                std::cin >> file_name;
+
+                std::ifstream file(file_name);
+
+                read_graph_from_file(graph, file);
             }
         }
 
