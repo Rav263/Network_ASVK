@@ -28,7 +28,7 @@ namespace IO {
             }
         }
 
-        for (int i = 0; i <= 15; i++) {
+        /*for (int i = 0; i <= 15; i++) {
             if (not graph.is_in_graph(i)) continue;
 
             auto now_edges = graph.get_vertex_edges(i);
@@ -39,7 +39,7 @@ namespace IO {
                 else std::cout << now_edges[k] << " ";
             }
             std::cout << std::endl;
-        }
+        }*/
     }
     void read_graph_from_file(NetworkGraph &graph, std::ifstream &file) {
         Vertex start, end;
