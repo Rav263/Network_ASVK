@@ -11,8 +11,8 @@ namespace IO {
         std::cout << "V \%vertex\% -- Add vertex to graph" << std::endl;
         std::cout << "E \%vertex\% \%vertex\% \%mass\% -- Add edge to graph" << std::endl;
         std::cout << "PRINT -- print graph" << std::endl;
-        std::cout << "DIST -- minimal distance between vertexes" << std::endl;
-        std::cout << "PATH -- minimal path between vertexes" << std::endl;
+        std::cout << "DIST -- minimal distance between vertices" << std::endl;
+        std::cout << "PATH -- minimal path between vertices" << std::endl;
         std::cout << "EXIT -- end work with server" << std::endl;
         std::cout << "FILE -- read graph from file" << std::endl;
     }
@@ -21,11 +21,24 @@ namespace IO {
 
         for (Edges now_edges : graph.get_full_graph()) {
             for (Edge now_edge : now_edges.second) {
-                std::cout << "(" <<now_edges.first << ", ";
+                std::cout << "(" << now_edges.first << ", ";
                 std::cout << now_edge.first << ", ";
                 std::cout << now_edge.second << ")";
                 std::cout << std::endl;
             }
+        }
+
+        for (int i = 0; i <= 15; i++) {
+            if (not graph.is_in_graph(i)) continue;
+
+            auto now_edges = graph.get_vertex_edges(i);
+
+            for (int k = 0; k <= 15; k++) {
+                if (not graph.is_in_graph(k)) continue;
+                if (now_edges.count(k) == 0) std::cout << "0 ";
+                else std::cout << now_edges[k] << " ";
+            }
+            std::cout << std::endl;
         }
     }
     void read_graph_from_file(NetworkGraph &graph, std::ifstream &file) {
